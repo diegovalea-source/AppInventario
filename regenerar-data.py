@@ -62,7 +62,7 @@ def extract_items(excel_dir):
 
             headers = [norm(value) for value in rows[0]]
             desc_col = first_matching(headers, lambda header: "DESCRIPCION" in header)
-            section_col = first_matching(headers, lambda header: "SECCION" in header)
+            section_col = first_matching(headers, lambda header: "SECCION" in header or "FAMILIA" in header)
             reference_col = first_matching(headers, lambda header: "REFERENCIA" in header)
             barcode_col = first_matching(headers, lambda header: "BARRAS" in header)
             stock_col = first_matching(
@@ -72,6 +72,9 @@ def extract_items(excel_dir):
                 or header.startswith("NO BOTELLAS"),
             )
             cost_col = first_matching(headers, lambda header: "COSTE" in header)
+
+            if desc_col is not None and cost_col is None and reference_col is None and barcode_col is None:
+                continue
 
             if desc_col is None:
                 desc_col = 0
